@@ -110,7 +110,7 @@ public class ClientFragment extends Fragment {
     }
 
     private void showAlertForCreatigBoard(String title, String message){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         if(title!=null) builder.setTitle(title);
         if(message!=null) builder.setMessage(message);
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.dialog_create_new_client,null);
@@ -127,18 +127,20 @@ public class ClientFragment extends Fragment {
                 String allName  = names  + " " +father_surname+" "+mother_surname;
                 if(allName.length()>0) {
                     //createNewBoard(boardName);
-                    getDataMyClient(id, pass, allName.trim());
+                    getDataMyClient(id, pass, names,father_surname,mother_surname,allName);
                 }else {
                     Toast.makeText(getContext(), "El nombre es requerido", Toast.LENGTH_LONG).show();
                 }
             }
         });
+
+        builder.setNegativeButton("Cancel",null);
         builder.create().show();
     }
 
-    private void getDataMyClient(String id, String pass, String name){
-        all = name;
-        Call<ResponseInsertClient> call = ApiAdapter.getApiService().insertClient(id,pass,name);
+    private void getDataMyClient(String id, String pass, String name, String father, String mother, String allName){
+        all = allName;
+        Call<ResponseInsertClient> call = ApiAdapter.getApiService().insertClient(id,pass,name,father,mother);
         call.enqueue( new InsertCallBack());
     }
 

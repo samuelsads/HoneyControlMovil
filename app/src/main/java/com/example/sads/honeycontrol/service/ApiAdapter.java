@@ -11,7 +11,7 @@ public class ApiAdapter {
     private static ApiService APISERVICE;
 
     public static ApiService getApiService(){
-        String baseUrl = "http://192.168.1.64/HoneyControl/views/modules/";
+        String baseUrl = "http://192.168.1.66/HoneyControl/views/modules/";
 
         if(APISERVICE==null){
 

@@ -1,22 +1,21 @@
 package com.example.sads.honeycontrol.service.response;
 
-import com.example.sads.honeycontrol.models.Client;
 import com.example.sads.honeycontrol.models.Products;
 
 import java.util.ArrayList;
 
 /**
- * Created by sads on 31/03/17.
+ * Created by sads on 14/04/17.
  */
-public class ResponseClient {
-    private ArrayList<Client> respuesta;
+public class ResponseProduct {
+    private ArrayList<Products> respuesta;
     private boolean success;
 
-    public ArrayList<Client> getRespuesta() {
+    public ArrayList<Products> getRespuesta() {
         return respuesta;
     }
 
-    public void setRespuesta(ArrayList<Client> respuesta) {
+    public void setRespuesta(ArrayList<Products> respuesta) {
         this.respuesta = respuesta;
     }
 

@@ -17,11 +17,13 @@ import android.view.View;
 import com.example.sads.honeycontrol.R;
 import com.example.sads.honeycontrol.Utils.Util;
 import com.example.sads.honeycontrol.fragments.ClientFragment;
+import com.example.sads.honeycontrol.fragments.ProductFragment;
 
 public class DashActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private SharedPreferences prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,17 +66,18 @@ public class DashActivity extends AppCompatActivity {
                     fragment = new ClientFragment();
                     fragmentTransaction=true;
                     break;
-               /* case R.id.menu_alert:
-                    fragment = new AlertsFragment();
+                case R.id.menu_products:
+                    fragment = new ProductFragment();
                     fragmentTransaction=true;
                     break;
-                case R.id.menu_info:
+               /* case R.id.menu_info:
                     fragment = new InfoFragment();
                     fragmentTransaction=true;
                     break;*/
             }
 
             if(fragmentTransaction){
+                item.setChecked(false);
                 changeFragment(fragment,item);
                 drawerLayout.closeDrawers();
             }

@@ -13,11 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sads.honeycontrol.R;
-import com.example.sads.honeycontrol.activities.DashActivity;
 import com.example.sads.honeycontrol.models.Client;
+import com.example.sads.honeycontrol.models.Products;
 import com.example.sads.honeycontrol.service.ApiAdapter;
-import com.example.sads.honeycontrol.service.response.ResponseClient;
 import com.example.sads.honeycontrol.service.response.ResponseDeleteClient;
+import com.example.sads.honeycontrol.service.response.ResponseDeleteProduct;
 
 import java.util.List;
 
@@ -26,11 +26,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by sads on 31/03/17.
+ * Created by sads on 14/04/17.
  */
-public class adapterClient extends RecyclerView.Adapter<adapterClient.ViewHolder> {
-
-    private List<Client> client;
+public class adapterProduct  extends RecyclerView.Adapter<adapterProduct.ViewHolder> {
+    private List<Products> product;
     private int layout;
     private OnItemClickListener itemClickListener;
     private Context context;
@@ -38,9 +37,8 @@ public class adapterClient extends RecyclerView.Adapter<adapterClient.ViewHolder
     private String id="1";
     private String pass="aduLvDJ7Lk74c";
 
-
-    public adapterClient(List<Client> client, int layout, Activity activity, OnItemClickListener listener) {
-        this.client = client;
+    public adapterProduct(List<Products> product, int layout, Activity activity, OnItemClickListener listener) {
+        this.product = product;
         this.layout = layout;
         this.itemClickListener = listener;
         this.activity = activity;
@@ -48,7 +46,7 @@ public class adapterClient extends RecyclerView.Adapter<adapterClient.ViewHolder
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public adapterProduct.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v  = LayoutInflater.from(parent.getContext()).inflate(layout,parent,false);
         context = parent.getContext();
         ViewHolder vh  = new ViewHolder(v);
@@ -56,42 +54,44 @@ public class adapterClient extends RecyclerView.Adapter<adapterClient.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bind(client.get(position),itemClickListener);
+    public void onBindViewHolder(adapterProduct.ViewHolder holder, int position) {
+        holder.bind(product.get(position),itemClickListener);
     }
-
 
     @Override
     public int getItemCount() {
-        return client.size();
+        return product.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener {
-        public TextView textViewName;
+        public TextView textViewPrice;
+        public TextView textViewSize;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            textViewName = (TextView) itemView.findViewById(R.id.textViewTitle);
+            textViewPrice = (TextView) itemView.findViewById(R.id.textViewPrice);
+            textViewSize = (TextView) itemView.findViewById(R.id.textViewSize);
             itemView.setOnCreateContextMenuListener(this);
 
         }
 
-        public void bind(final Client client, final OnItemClickListener listener) {
+        public void bind(final Products product, final OnItemClickListener listener) {
             // this.TextViewName.setText(name);
-            textViewName.setText(client.getName());
+            textViewPrice.setText(product.getPrice());
+            textViewSize.setText(product.getSize());
             //imageView.setImageResource(movies.getPoster());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onItemClik(client, getAdapterPosition());
+                    listener.onItemClik(product, getAdapterPosition());
                 }
             });
         }
 
         @Override
         public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-            Client myclient  = client.get(this.getAdapterPosition());
-            contextMenu.setHeaderTitle(myclient.getName());
+            Products myproducts  = product.get(this.getAdapterPosition());
+            contextMenu.setHeaderTitle(myproducts.getSize());
             MenuInflater inflater  = activity.getMenuInflater();
             inflater.inflate(R.menu.menu_options,contextMenu);
             for (int i =0; i<contextMenu.size();i++){
@@ -103,10 +103,10 @@ public class adapterClient extends RecyclerView.Adapter<adapterClient.ViewHolder
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()){
                 case R.id.delete:
-                    deleteMyClient(client.get(getAdapterPosition()).getId());
-                    client.remove(getAdapterPosition());
+                   deleteMyProduct(product.get(getAdapterPosition()).getId());
+                    product.remove(getAdapterPosition());
                     notifyItemRemoved(getAdapterPosition());
-                    Toast.makeText(activity,"eliminar el id ",Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity,"eliminar el id1 ",Toast.LENGTH_LONG).show();
                     return  true;
                 default:
                     return  false;
@@ -114,31 +114,30 @@ public class adapterClient extends RecyclerView.Adapter<adapterClient.ViewHolder
             }
         }
     }
-        public interface OnItemClickListener{
-            void onItemClik(Client client, int position);
-        }
 
-    private void deleteMyClient(int idClient){
-        Call<ResponseDeleteClient> call = ApiAdapter.getApiService().deleteClient(id,pass,idClient);
+    private void deleteMyProduct(int idProduct){
+        Call<ResponseDeleteProduct> call = ApiAdapter.getApiService().deleteProduct(id,pass,idProduct);
         call.enqueue( new ResponsableCallBack());
     }
-    class ResponsableCallBack implements Callback<ResponseDeleteClient>{
+
+    class ResponsableCallBack implements Callback<ResponseDeleteProduct>{
 
         @Override
-        public void onResponse(Call<ResponseDeleteClient> call, Response<ResponseDeleteClient> response) {
+        public void onResponse(Call<ResponseDeleteProduct> call, Response<ResponseDeleteProduct> response) {
             if(response.isSuccessful()){
-                ResponseDeleteClient responsable= response.body();
-                if(responsable.isSuccess()){
-                    responsable.isSuccess();
+                ResponseDeleteProduct deletes = response.body();
+                if(deletes.isSuccess()){
 
                 }
             }
         }
 
-
         @Override
-        public void onFailure(Call<ResponseDeleteClient> call, Throwable t) {
+        public void onFailure(Call<ResponseDeleteProduct> call, Throwable t) {
 
         }
+    }
+    public interface OnItemClickListener{
+        void onItemClik(Products product, int position);
     }
 }
