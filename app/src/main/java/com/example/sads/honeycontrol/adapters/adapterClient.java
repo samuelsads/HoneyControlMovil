@@ -106,7 +106,7 @@ public class adapterClient extends RecyclerView.Adapter<adapterClient.ViewHolder
                     deleteMyClient(client.get(getAdapterPosition()).getId());
                     client.remove(getAdapterPosition());
                     notifyItemRemoved(getAdapterPosition());
-                    Toast.makeText(activity,"eliminar el id ",Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity,"El cliente fue eliminado con exito",Toast.LENGTH_LONG).show();
                     return  true;
                 default:
                     return  false;

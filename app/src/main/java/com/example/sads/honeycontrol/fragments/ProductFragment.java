@@ -80,11 +80,13 @@ public class ProductFragment extends Fragment {
         builder.setView(viewInflated);
         final EditText size = (EditText) viewInflated.findViewById(R.id.createNewSize);
         final EditText price = (EditText) viewInflated.findViewById(R.id.createNewPrice);
+        //final EditText amount  = (EditText) viewInflated.findViewById(R.id.createNewAmount);
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String price1 = price.getText().toString().trim();
                 String size1  = size.getText().toString().trim();
+                //String amount1 = amount.getText().toString().trim();
                 if(price.length()>0 && size.length()>0) {
                     //createNewBoard(boardName);
                     insertProduct(id,pass, size1,price1);

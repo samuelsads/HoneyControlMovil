@@ -62,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
     private void setCredentialsIfExist(){
         String UserPrefe = Util.getUserPrefs(prefs);
         String passPrefe = Util.getPassPrefs(prefs);
+        int id  = Util.getIdPrefs(prefs);
         if(!TextUtils.isEmpty(UserPrefe) && !TextUtils.isEmpty(passPrefe)){
             user.setText(UserPrefe);
             pass.setText(passPrefe);
@@ -89,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                 ResponseLogin responsable= response.body();
                 if(responsable.isResponde()){
                     //Toast.makeText(getApplicationContext(),"pass"+responsable.getPass(),Toast.LENGTH_LONG).show();
+
                     openDash(responsable.getResult());
                 }else{
                     Toast.makeText(getApplicationContext(),"Usuario o contraseña incorrecta, verifique",Toast.LENGTH_LONG).show();
@@ -105,10 +107,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void openDash(ArrayList<result> result){
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("id",result.get(0).getId());
+        editor.commit();
+        editor.apply();
         Intent intent = new Intent(this, DashActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.putExtra("id", result.get(0).getId());
-        intent.putExtra("pass", result.get(0).getPass());
+        intent.putExtra("id",result.get(0).getId());
+        intent.putExtra("pass",result.get(0).getPass());
         startActivity(intent);
     }
 }

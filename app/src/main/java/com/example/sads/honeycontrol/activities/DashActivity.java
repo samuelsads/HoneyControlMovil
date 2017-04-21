@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,14 +24,23 @@ public class DashActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private SharedPreferences prefs;
+    private int id;
+    private String passw;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash);
+        prefs =getSharedPreferences("LoginPreferences", Context.MODE_PRIVATE);
+        if(!TextUtils.isEmpty(Util.getPassPrefs(prefs)) && Util.getIdPrefs(prefs)>0){
+            id=Util.getIdPrefs(prefs);
+            passw=Util.getPassPrefs(prefs);
+        }else {
+            id = getIntent().getExtras().getInt("id");
+            passw = getIntent().getExtras().getString("pass");
+        }
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.naview);
-        prefs =getSharedPreferences("LoginPreferences", Context.MODE_PRIVATE);
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
@@ -61,6 +71,7 @@ public class DashActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(MenuItem item) {
             boolean fragmentTransaction = false;
             Fragment fragment = null;
+
             switch (item.getItemId()){
                 case R.id.menu_client:
                     fragment = new ClientFragment();
@@ -87,6 +98,10 @@ public class DashActivity extends AppCompatActivity {
     };
 
     private void changeFragment(Fragment fragment, MenuItem item){
+        Bundle data = new Bundle();
+        data.putString("id", "1");
+        data.putString("pass",passw);
+        fragment.setArguments(data);
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame,fragment).commit();
         item.setChecked(true);
         getSupportActionBar().setTitle(item.getTitle());

@@ -19,10 +19,15 @@ public class Util {
         return preferences.getString("password","");
     }
 
+    public static int getIdPrefs(SharedPreferences preferences){
+        return preferences.getInt("id",0);
+    }
+
     public static void removeSharedPreferences(SharedPreferences preferences){
         SharedPreferences.Editor editor= preferences.edit();
         editor.remove("user");
         editor.remove("password");
+        editor.remove("id");
         editor.apply();
 
     }

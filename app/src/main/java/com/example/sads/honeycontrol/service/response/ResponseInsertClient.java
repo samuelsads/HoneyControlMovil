@@ -5,6 +5,7 @@ package com.example.sads.honeycontrol.service.response;
  */
 public class ResponseInsertClient {
     private boolean success;
+    private int id;
 
     public boolean isSuccess() {
         return success;
@@ -12,5 +13,13 @@ public class ResponseInsertClient {
 
     public void setSuccess(boolean success) {
         this.success = success;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

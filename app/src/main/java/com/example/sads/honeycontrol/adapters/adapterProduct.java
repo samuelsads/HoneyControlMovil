@@ -103,10 +103,10 @@ public class adapterProduct  extends RecyclerView.Adapter<adapterProduct.ViewHol
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()){
                 case R.id.delete:
-                   deleteMyProduct(product.get(getAdapterPosition()).getId());
-                    product.remove(getAdapterPosition());
-                    notifyItemRemoved(getAdapterPosition());
-                    Toast.makeText(activity,"eliminar el id1 ",Toast.LENGTH_LONG).show();
+                   deleteMyProduct(product.get(this.getAdapterPosition()).getId());
+                    product.remove(this.getAdapterPosition());
+                    notifyItemRemoved(this.getAdapterPosition());
+                    Toast.makeText(activity,"eliminar el id ",Toast.LENGTH_LONG).show();
                     return  true;
                 default:
                     return  false;

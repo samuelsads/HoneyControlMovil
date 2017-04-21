@@ -1,7 +1,9 @@
 package com.example.sads.honeycontrol.fragments;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -40,10 +42,11 @@ public class ClientFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayout;
     private int cont =0;
-    private String id="1";
-    private String pass="aduLvDJ7Lk74c";
+    private String id ;
+    private String  pass;
     private FloatingActionButton btnAddClient;
     private String all;
+
     public ClientFragment() {
         // Required empty public constructor
     }
@@ -54,6 +57,9 @@ public class ClientFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_client, container, false);
+        id=getArguments().getString("id");
+        pass=getArguments().getString("pass");
+
         mRecyclerView = (RecyclerView) view.findViewById(R.id.reciclerViewClient);
         mLayout  = new LinearLayoutManager(getActivity());
         //client  = this.getAllMovies();
@@ -152,8 +158,13 @@ public class ClientFragment extends Fragment {
             ResponseInsertClient responsable= response.body();
 
             if(response.isSuccessful()){
-                addNewClient(all);
-                Toast.makeText(getContext(), "Todo un exito" +responsable.isSuccess(), Toast.LENGTH_LONG).show();
+                if(responsable.isSuccess()){
+                    addNewClient(responsable.getId(),all);
+                    Toast.makeText(getContext(), "Todo un exito" , Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getContext(), "Algo salio mal..." +responsable.isSuccess(), Toast.LENGTH_LONG).show();
+                }
+
             }else{
                 Toast.makeText(getContext(), "Ups, hubo un error...", Toast.LENGTH_LONG).show();
             }
@@ -165,15 +176,9 @@ public class ClientFragment extends Fragment {
         }
     }
 
-    public void addNewClient(String name){
-        client.add(0, new Client(124,name));
+    public void addNewClient(int id, String name){
+        client.add(0, new Client(id,name));
         mAdapter.notifyItemInserted(0);
         mLayout.scrollToPosition(0);
-    }
-
-    private void deleteMovie(int position){
-        client.remove(position);
-        mAdapter.notifyItemRemoved(position);
-
     }
 }
