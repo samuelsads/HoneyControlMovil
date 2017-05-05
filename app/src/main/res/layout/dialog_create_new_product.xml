@@ -24,12 +24,5 @@
         android:id="@+id/createNewPrice"/>
 
     </LinearLayout>
-    <EditText
-        android:layout_margin="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="board title"
-        android:id="@+id/createNewNote"/>
-
 
 </LinearLayout>

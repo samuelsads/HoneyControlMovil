@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.sads.honeycontrol.R;
+import com.example.sads.honeycontrol.Utils.Constans;
+import com.example.sads.honeycontrol.Utils.ErrorResponse;
 import com.example.sads.honeycontrol.adapters.adapterClient;
 import com.example.sads.honeycontrol.models.Client;
 import com.example.sads.honeycontrol.service.ApiAdapter;
@@ -45,7 +47,9 @@ public class ClientFragment extends Fragment {
     private String id ;
     private String  pass;
     private FloatingActionButton btnAddClient;
-    private String all;
+    private String name;
+    private String father_surname;
+    private String mother_surname;
 
     public ClientFragment() {
         // Required empty public constructor
@@ -127,13 +131,11 @@ public class ClientFragment extends Fragment {
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                String names = input.getText().toString().trim();
-                String father_surname  = fatherSurname.getText().toString().trim();
-                String mother_surname  = motherSurname.getText().toString().trim();
-                String allName  = names  + " " +father_surname+" "+mother_surname;
-                if(allName.length()>0) {
-                    //createNewBoard(boardName);
-                    getDataMyClient(id, pass, names,father_surname,mother_surname,allName);
+                 name = input.getText().toString().trim();
+                 father_surname  = fatherSurname.getText().toString().trim();
+                 mother_surname  = motherSurname.getText().toString().trim();
+                if(name.length()>0 && fatherSurname.length()>0) {
+                    getDataMyClient(id, pass, name,father_surname,mother_surname);
                 }else {
                     Toast.makeText(getContext(), "El nombre es requerido", Toast.LENGTH_LONG).show();
                 }
@@ -144,8 +146,7 @@ public class ClientFragment extends Fragment {
         builder.create().show();
     }
 
-    private void getDataMyClient(String id, String pass, String name, String father, String mother, String allName){
-        all = allName;
+    private void getDataMyClient(String id, String pass, String name, String father, String mother){
         Call<ResponseInsertClient> call = ApiAdapter.getApiService().insertClient(id,pass,name,father,mother);
         call.enqueue( new InsertCallBack());
     }
@@ -158,11 +159,11 @@ public class ClientFragment extends Fragment {
             ResponseInsertClient responsable= response.body();
 
             if(response.isSuccessful()){
-                if(responsable.isSuccess()){
-                    addNewClient(responsable.getId(),all);
-                    Toast.makeText(getContext(), "Todo un exito" , Toast.LENGTH_LONG).show();
+                if(responsable.getSuccess()==Constans.SUCCESS){
+                    addNewClient(responsable.getId(),name,father_surname,mother_surname);
+                    Toast.makeText(getContext(), "Todo un exito", Toast.LENGTH_LONG).show();
                 }else{
-                    Toast.makeText(getContext(), "Algo salio mal..." +responsable.isSuccess(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), ErrorResponse.error(responsable.getSuccess()), Toast.LENGTH_LONG).show();
                 }
 
             }else{
@@ -176,8 +177,8 @@ public class ClientFragment extends Fragment {
         }
     }
 
-    public void addNewClient(int id, String name){
-        client.add(0, new Client(id,name));
+    public void addNewClient(int id, String name, String father_surname, String mother_surname){
+        client.add(0, new Client(id,name,father_surname, mother_surname));
         mAdapter.notifyItemInserted(0);
         mLayout.scrollToPosition(0);
     }

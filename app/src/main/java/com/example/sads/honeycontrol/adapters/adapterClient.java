@@ -2,6 +2,8 @@ package com.example.sads.honeycontrol.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -9,15 +11,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sads.honeycontrol.R;
+import com.example.sads.honeycontrol.Utils.Util;
 import com.example.sads.honeycontrol.activities.DashActivity;
 import com.example.sads.honeycontrol.models.Client;
 import com.example.sads.honeycontrol.service.ApiAdapter;
 import com.example.sads.honeycontrol.service.response.ResponseClient;
 import com.example.sads.honeycontrol.service.response.ResponseDeleteClient;
+import com.example.sads.honeycontrol.service.response.ResponseUpdateCliente;
 
 import java.util.List;
 
@@ -37,6 +42,9 @@ public class adapterClient extends RecyclerView.Adapter<adapterClient.ViewHolder
     private Activity activity;
     private String id="1";
     private String pass="aduLvDJ7Lk74c";
+    private String name;
+    private String father_surname;
+    private String mother_surname;
 
 
     public adapterClient(List<Client> client, int layout, Activity activity, OnItemClickListener listener) {
@@ -78,7 +86,7 @@ public class adapterClient extends RecyclerView.Adapter<adapterClient.ViewHolder
 
         public void bind(final Client client, final OnItemClickListener listener) {
             // this.TextViewName.setText(name);
-            textViewName.setText(client.getName());
+            textViewName.setText(Util.formatName(client.getName(),client.getFather_surname(),client.getMother_surname()));
             //imageView.setImageResource(movies.getPoster());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -108,15 +116,81 @@ public class adapterClient extends RecyclerView.Adapter<adapterClient.ViewHolder
                     notifyItemRemoved(getAdapterPosition());
                     Toast.makeText(activity,"El cliente fue eliminado con exito",Toast.LENGTH_LONG).show();
                     return  true;
+                case R.id.edit:
+
+                    showAlertForEditClient("Edit client","You can edit name, father and mother surname",client.get(getAdapterPosition()), getAdapterPosition());
+                    return true;
                 default:
                     return  false;
 
             }
         }
     }
+
+    private void showAlertForEditClient(String title, String message, final Client client, final int position){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        if(title!=null) builder.setTitle(title);
+        if(message!=null) builder.setMessage(message);
+        View viewInflated = LayoutInflater.from(context).inflate(R.layout.dialog_create_new_client,null);
+        builder.setView(viewInflated);
+        final EditText namePerson = (EditText) viewInflated.findViewById(R.id.createNewName);
+        final EditText fatherSurname = (EditText) viewInflated.findViewById(R.id.createNewFatherSurname);
+        final EditText motherSurname = (EditText) viewInflated.findViewById(R.id.createNewMotherSurname);
+        namePerson.setText(client.getName());
+        fatherSurname.setText(client.getFather_surname());
+        motherSurname.setText(client.getMother_surname());
+        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                name = namePerson.getText().toString().trim();
+                father_surname  = fatherSurname.getText().toString().trim();
+                mother_surname  = motherSurname.getText().toString().trim();
+                if(name.length()>0 && father_surname.length()>0) {
+
+                    updateClienteById(id,pass,name,father_surname,mother_surname,client.getId());
+                    editClientAdapter(name,father_surname,mother_surname,client);
+                    Toast.makeText(activity, "El nombre es requerido1", Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(activity, "El nombre es requerido", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel",null);
+        builder.create().show();
+    }
+
+
+    private void editClientAdapter(String name,String father, String mother, Client client){
+
+        client.setName(name);
+        client.setFather_surname(father);
+        client.setMother_surname(mother);
+        notifyDataSetChanged();
+    }
+
         public interface OnItemClickListener{
             void onItemClik(Client client, int position);
         }
+
+
+    private void updateClienteById(String id, String pass, String name, String father_surname, String mother_surname, int idClient){
+        Call<ResponseUpdateCliente> call = ApiAdapter.getApiService().updateCliente(id,pass,idClient,name,father_surname,mother_surname);
+        call.enqueue( new ResponsableUpdateCliente());
+    }
+
+     class ResponsableUpdateCliente implements Callback<ResponseUpdateCliente>{
+
+         @Override
+         public void onResponse(Call<ResponseUpdateCliente> call, Response<ResponseUpdateCliente> response) {
+
+         }
+
+         @Override
+         public void onFailure(Call<ResponseUpdateCliente> call, Throwable t) {
+
+         }
+     }
 
     private void deleteMyClient(int idClient){
         Call<ResponseDeleteClient> call = ApiAdapter.getApiService().deleteClient(id,pass,idClient);
@@ -141,4 +215,6 @@ public class adapterClient extends RecyclerView.Adapter<adapterClient.ViewHolder
 
         }
     }
+
+
 }

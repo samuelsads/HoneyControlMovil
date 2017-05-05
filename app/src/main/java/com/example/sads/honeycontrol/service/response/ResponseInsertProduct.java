@@ -6,7 +6,6 @@ package com.example.sads.honeycontrol.service.response;
 public class ResponseInsertProduct {
     private boolean success;
     private int id;
-
     public int getId() {
         return id;
     }
@@ -22,4 +21,5 @@ public class ResponseInsertProduct {
     public void setSuccess(boolean success) {
         this.success = success;
     }
+
 }

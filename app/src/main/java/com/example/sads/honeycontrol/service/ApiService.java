@@ -7,6 +7,7 @@ import com.example.sads.honeycontrol.service.response.ResponseInsertClient;
 import com.example.sads.honeycontrol.service.response.ResponseInsertProduct;
 import com.example.sads.honeycontrol.service.response.ResponseLogin;
 import com.example.sads.honeycontrol.service.response.ResponseProduct;
+import com.example.sads.honeycontrol.service.response.ResponseUpdateCliente;
 
 import retrofit2.Call;
 import retrofit2.http.POST;
@@ -36,4 +37,7 @@ public interface ApiService {
 
     @POST("deleteProduct.php")
     Call<ResponseDeleteProduct> deleteProduct(@Query("id") String id, @Query("pass") String pass, @Query("idProduct") int idProduct);
+
+    @POST("updateClient.php")
+    Call<ResponseUpdateCliente> updateCliente(@Query("id") String id, @Query("pass") String pass, @Query("idClient") int idClient, @Query("name") String name, @Query("father") String father, @Query("mother") String mother);
 }

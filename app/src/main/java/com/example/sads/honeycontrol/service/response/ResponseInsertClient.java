@@ -4,14 +4,14 @@ package com.example.sads.honeycontrol.service.response;
  * Created by sads on 7/04/17.
  */
 public class ResponseInsertClient {
-    private boolean success;
+    private String success;
     private int id;
 
-    public boolean isSuccess() {
+    public String getSuccess() {
         return success;
     }
 
-    public void setSuccess(boolean success) {
+    public void setSuccess(String success) {
         this.success = success;
     }
 
